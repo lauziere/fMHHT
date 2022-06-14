@@ -8,11 +8,13 @@ This repository contains a Python3 implementation of Multiple Hypothesis Hypergr
 
 MHHT adapts hypothesis oriented multiple hypothesis tracking (MHT) to further evaluate sampled hypotheses via hypergraphical models. The data association step is enhanced to more effectively disambiguate competeting hypotheses than the traditional MHT paradigm. The method is only effective in presence of true object interdepence; i.e. when object behaviors are contingent on one another. Annotated data can be used to estimate parameters of graphical models, enhancing the accuracy of the robust data association step. 
 
+This code uses the optimized Murty's algorithm from Miller, Stone, and Cox. The suggested changes in Cox and Miller to make Murty's algorithm more suited to the data assoication problem are also implemented. 
+
 In particular, biologically guided graphical models are used to perform seam cell identification in embryonic *C. elegans*. The 20 or 22 seam cells together are used to approximate the posture of the coiled embryo. Volumetric images of the developing embryo are captured throughout late-stage embryogensis. A convolutional neural network detects seam cell nuclei while MHHT is used to perform MOT on the seam cell nuclei. 
  
 ## Installation
 
-The code requires Python 3.6 or higher, and requires NumPy>=1.19.5, Pandas>=1.1.5, and Scipy>=1.5.4. The Binary Tree Partition algorithm implementation is included in this repository, but requires gurobipy==9.1.2. Cloning the repository and installing the requirements in a new Python 3.6.5 envirionment is advised.  
+The code requires Python 3.6 or higher, and requires NumPy>=1.19.5, Pandas>=1.1.5, and Scipy>=1.5.4. Cloning the repository and installing the requirements in a new Python 3.6.5 envirionment is advised.  
   
 ## Configuration
 
@@ -48,11 +50,6 @@ Unary models 'GNN' and 'MHT' are able to be performed in the MHHT framework. The
 
 The tree depth *N* defines how many future frames are considered to yield tracks at the current frame. *N*=1 is a standard frame-to-frame tracking approach. Using future frames improves performance but causes exponential increases in computation. 
 
-### K best solver: Murty's algorithm ('Murty') or Binary Tree Partition ('BTP')
-
-Both Murty's algorithm (\[1\], \[2\]) and the Binary Tree Partition algorithm (\[3\], \[4\]) are contained in this repository. Either can be used to generate the *K* best solutions to the GNN linear program with gates. Murty's algorithm is generally faster, but may not return *K* unique solutions to the augmented linear program from \[5\], whereas the BTP algorithm will always return *K* unique solutions. 
-
-### Start frame & End frame
 
 |         | Pre-Q           | Post-Q  |
 | ------------- |:-------------:| -----:|
