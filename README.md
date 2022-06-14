@@ -1,6 +1,6 @@
-# Multiple Hypothesis Hypergraph Tracking for Posture Tracking in Embryonic *C. elegans*
+# Fast Multiple Hypothesis Hypergraph Tracking (fMHHT) for Posture Tracking in Embryonic *C. elegans*
 
-This repository contains a Python3 implementation of Multiple Hypothesis Hypergraph Tracking (MHHT) with application to Posture Tracking in Embryonic *C. elegans* as described in:
+This repository contains a Python3 implementation of Fast Multiple Hypothesis Hypergraph Tracking (fMHHT) with application to Posture Tracking in Embryonic *C. elegans* as described in:
 
 - Andrew Lauziere, Evan Ardiel, Stephen Xu, Hari Shroff. [*Multiple Hypothesis Hypergraph Tracking for Posture Identification in Embryonic Caenorhabditis elegans*](https://arxiv.org/abs/2111.06425)
 
