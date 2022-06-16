@@ -1162,7 +1162,7 @@ def kBest2DAssign_DA(*args):
 
     return col4rowBest, row4colBest, gainBest, rowPermsBest
 
-def kBest2DAssign_DA_MHHT(*args):
+def kBest2DAssign_DA_MHHT_old(*args):
 
     nargin = len(locals())
 
@@ -1233,6 +1233,67 @@ def kBest2DAssign_DA_MHHT(*args):
         gainBest = -gainBest + numRow*CDelta[rowPermsBest]
     else:
         gainBest = gainBest + numRow*CDelta[rowPermsBest]
+
+    if didFlip:
+        temp = row4colBest.copy()
+        row4colBest = col4rowBest.copy()
+        col4rowBest = temp.copy()
+
+    return col4rowBest, row4colBest, gainBest, rowPermsBest
+
+def kBest2DAssign_DA_MHHT(Cs, k):
+
+    Z, numRow, numCol = Cs.shape
+
+    didFlip = False
+    if numRow>numCol:
+        Cs = np.transpose(Cs, axes=(0,2,1))
+        temp = numRow
+        numRow = numCol
+        numCol = temp
+        didFlip = True
+
+    col4rowBest = np.zeros((numRow, k), 'int')
+    row4colBest = np.zeros((numCol, k), 'int')
+    rowPermsBest = np.zeros(k, 'int')
+    gainBest = np.zeros(k,'float32')
+
+    numPad = numCol - numRow
+    Cs = np.concatenate([Cs, np.zeros((Z, numPad, numCol))], axis=1)
+    
+    # Now we solve each one and insert it
+    HypList = BinaryHeap(50*k, False)
+    for z in range(Z):
+
+        LCHyp = MurtyData_DA_MHHT(Cs[z], z, numRow)
+        HypList.insert(LCHyp, 0)
+
+    for curSweep in range(k):
+
+        smallestSol = HypList.getTop()
+
+        if HypList.heapSize() != 0:
+            col4rowBest[:,curSweep] = smallestSol.key.col4rowLCFull[:numRow]
+            row4colBest[:,curSweep] = smallestSol.key.row4colLCFull
+            gainBest[curSweep] = smallestSol.key.gainFull
+            rowPermsBest[curSweep] = smallestSol.key.z
+
+        else:
+            col4rowBest=col4rowBest[:,:curSweep]
+            row4colBest = row4colBest[:,:curSweep]
+            gainBest = gainBest[:curSweep]
+            rowPermsBest = rowPermsBest[:curSweep]
+
+            break
+
+        smallestSol = HypList.deleteTop()
+        smallestSol.key.split(HypList)
+
+    del HypList
+
+    if numPad>0:
+        sel = row4colBest>numRow-1
+        row4colBest[sel] = -1
 
     if didFlip:
         temp = row4colBest.copy()
